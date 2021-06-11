@@ -1,0 +1,1 @@
+alert('load fro another js');
