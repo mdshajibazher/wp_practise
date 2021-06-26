@@ -707,3 +707,11 @@ function filter_pqrc_countiries($countries){
 }
 
 add_filter('pqrc_countiries','filter_pqrc_countiries');
+
+function t21_modify_main_query($wpq){
+	if(is_home() && $wpq->is_main_query()){
+		$wpq->set('post__not_in',array(78));
+	}
+	
+}
+add_action('pre_get_posts','t21_modify_main_query');
