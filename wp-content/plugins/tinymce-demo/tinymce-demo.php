@@ -22,6 +22,9 @@ class TinyMceDemo{
     function tmc_external_buttons($buttons){
         $buttons[] = 'tmc_button_one';
         $buttons[] = 'tmc_button_two';
+        $buttons[] = 'tmc_button_three';
+        $buttons[] = 'tmc_button_four';
+        $buttons[] = 'tmc_form';
         return $buttons;
     }
 
