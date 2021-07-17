@@ -9,8 +9,8 @@ Text Domain: db-demo
 Domain Path: '/languages' 
 */
 
-
-class DBDemo{
+require_once('DbTablePersons.php');
+class DBDemo extends DbTablePersons{
     const DB_DEMO_DB_VERSION = '1.6';
 
     function __construct(){
@@ -18,9 +18,14 @@ class DBDemo{
         register_deactivation_hook( __FILE__, [$this,'dbDemoFlushData'] );
         add_action('admin_menu',[$this,'DBDataShowInAdmin']);
         add_action('admin_post_dbdemo_add_record',[$this,'dbdemoAddRecord']);
+        add_action('admin_enqueue_scripts',[$this,'dbDemoAssets']);
         // add_action('plugins_loaded',[$this,'dbDemoDropColumn']);
     }
-
+    function dbDemoAssets($hook){
+        if($hook == 'toplevel_page_dbdemo'): 
+            wp_enqueue_style('db_demo_form_css',plugin_dir_url(__FILE__)."assets/css/form.css");
+        endif;
+    }
     function dbDemoInit(){
         global $wpdb;
         $table_name = $wpdb->prefix."persons";
@@ -103,23 +108,53 @@ class DBDemo{
         global $wpdb;
         $id = $_GET['pid'] ?? false;
         $id = sanitize_key($id);
+        if($id){
+            if(!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'],"db_demo_edit"))
+            {
+                wp_die('<h3 style="width: 100%;text-align: center;margin-top: 50px">You are not authorized</h3>');
+            }
+        }
           $id ?   $result = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}persons WHERE id='{$id}'") : $result= "";
     
         ?>
+        <div class="form_box">
+            <div class="form_box_header">
+                <?php _e( 'Data Form', 'db-demo' ) ?>
+            </div>
+            <div class="form_box_content">
+                <form action="<?php echo admin_url('admin-post.php'); ?>" method="POST">
+                <!-- <p class="notice notice-error is-dismissable">
+                    some error
+                </p> -->
+                <?php wp_nonce_field('db_demo','nonce'); ?>
+                <input type="hidden" name="action" value="dbdemo_add_record">
+                <p> Name: <input type="text" name="name" <?php echo  $id ? "value='{$result->name}'" : "" ?> />  </p>
+                    <p> Email: <input type="text" name="email" <?php echo  $id ? "value='{$result->email}'" : "" ?> /> </p>
+                    <?php 
+                    echo $id ? '<input type="hidden" name="id" value="'.$id.'">'. submit_button('Update Record') : submit_button('Add Record');
+                    ?>
+                </form>
+            </div>
+        </div>
 
-        <form action="<?php echo admin_url('admin-post.php'); ?>" method="POST">
-        <!-- <p class="notice notice-error is-dismissable">
-            some error
-        </p> -->
-        <?php wp_nonce_field('db_demo','nonce'); ?>
-        <input type="hidden" name="action" value="dbdemo_add_record">
-           <p> Name: <input type="text" name="name" <?php echo  $id ? "value='{$result->name}'" : "" ?> />  </p>
-            <p> Email: <input type="email" name="email" <?php echo  $id ? "value='{$result->email}'" : "" ?> /> </p>
-            <?php 
-            echo $id ? '<input type="hidden" name="id" value="'.$id.'">'. submit_button('Update Record') : submit_button('Add Record');
-             ?>
-        </form>
+
+        <div class="form_box" style="margin-top: 30px;">
+            <div class="form_box_header">
+                <?php _e( 'Persons List', 'db-demo' ) ?>
+            </div>
+            <div class="form_box_content">
+                <?php 
+                $dbDemoPersonsList = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}persons ORDER BY id DESC",ARRAY_A);
+                $dbtp = new DbTablePersons($dbDemoPersonsList);
+                $dbtp->prepare_items();
+                $dbtp->display()
+                ?>
+            </div>
+        </div>
         
+
+    
+
    <?php }
 
 function dbdemoAddRecord(){
@@ -132,10 +167,12 @@ function dbdemoAddRecord(){
             $row_id = sanitize_text_field($_POST['id']);
             if($row_id) : 
                 $wpdb->update("{$wpdb->prefix}persons", ["name" => $name, "email" => $email], ['id' => $row_id]);
-                wp_redirect(admin_url('admin.php?page=dbdemo&&pid='.$row_id));
+                $nonce = wp_create_nonce("db_demo_edit");
+                wp_redirect(admin_url('admin.php?page=dbdemo&&pid='.$row_id)."&&nonce=".$nonce);
             else: 
                 $wpdb->insert("{$wpdb->prefix}persons", ["name" => $name, "email" => $email]);
-                wp_redirect(admin_url('admin.php?page=dbdemo&&pid='.$wpdb->insert_id));
+                $nonce = wp_create_nonce("db_demo_edit");
+                wp_redirect(admin_url('admin.php?page=dbdemo&&pid='.$wpdb->insert_id."&&nonce=".$nonce));
             endif;
         endif;
         
