@@ -1,0 +1,17 @@
+2021-08-01T02:26:32+00:00 CRITICAL require_once(): Failed opening required '/home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/widgets/test-wisdgets.php' (include_path='.:/usr/share/php') in /home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/elementor-demo-plugin.php on line 46
+
+2021-08-01T03:17:27+00:00 CRITICAL require_once(): Failed opening required '/home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/controls/test-control.php' (include_path='.:/usr/share/php') in /home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/elementor-demo-plugin.php on line 222
+
+2021-08-01T03:18:40+00:00 CRITICAL require_once(): Failed opening required '/home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/widgets/test-widget.php' (include_path='.:/usr/share/php') in /home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/elementor-demo-plugin.php on line 203
+
+2021-08-01T03:19:29+00:00 CRITICAL Uncaught Error: Class 'Elementor_Test_Widget' not found in /home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/elementor-demo-plugin.php:206
+Stack trace:
+#0 /home/pappu/sites/wordpress/wp-includes/class-wp-hook.php(292): Elementor_Test_Extension->init_widgets()
+#1 /home/pappu/sites/wordpress/wp-includes/class-wp-hook.php(316): WP_Hook->apply_filters()
+#2 /home/pappu/sites/wordpress/wp-includes/plugin.php(484): WP_Hook->do_action()
+#3 /home/pappu/sites/wordpress/wp-content/plugins/elementor/includes/managers/widgets.php(99): do_action()
+#4 /home/pappu/sites/wordpress/wp-content/plugins/elementor/includes/managers/widgets.php(235): Elementor\Widgets_Manager->init_widgets()
+#5 /home/pappu/sites/wordpress/wp-content/plugins/elementor/includes/elements/column.php(1032): Elementor\Widgets_Manager->get_widget_types()
+#6 /home/pappu/sites/wordpress/wp-content/plugins/elementor/includes/base/element-base.php(962): Elementor\Element_Column->_get_default_child_type()
+#7 /home/pappu/sites/wordpress/wp-co in /home/pappu/sites/wordpress/wp-content/plugins/elementor-demo-plugin/elementor-demo-plugin.php on line 206
+

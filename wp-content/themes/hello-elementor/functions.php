@@ -66,6 +66,8 @@ if ( ! function_exists( 'hello_elementor_setup' ) ) {
 			 * Gutenberg wide images.
 			 */
 			add_theme_support( 'align-wide' );
+			
+			add_theme_support('post-formats',['image','audio','video']);
 
 			/*
 			 * WooCommerce.
