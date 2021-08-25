@@ -1,0 +1,4 @@
+2021-08-20T08:14:41+00:00 CRITICAL syntax error, unexpected ',', expecting ';' in C:\xampp\htdocs\wp_practise\wp-content\themes\Simple Shop\inc\customizer\kirki.php on line 24
+
+2021-08-20T12:22:35+00:00 CRITICAL syntax error, unexpected '}', expecting ';' or ',' in C:\xampp\htdocs\wp_practise\wp-content\plugins\elementor-demo-plugin\widgets\test-widgets.php on line 226
+

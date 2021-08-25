@@ -90,8 +90,23 @@ final class Elementor_Test_Extension {
 		add_action( 'elementor/widgets/widgets_registered', [ $this, 'init_widgets' ] );
 		add_action( 'elementor/elements/categories_registered', [ $this,'add_elementor_widget_categories']);
 		//add_action( 'elementor/controls/controls_registered', [ $this, 'init_controls' ] );
+        add_action('elementor/frontend/after_enqueue_styles',[$this,'widget_styles']);
+        add_action('elementor/editor/after_enqueue_scripts',[$this,'custom_widget_scripts']);
+        add_action('elementor/frontend/after_enqueue_scripts',[$this,'progressbar_widget_scripts']);
 
 	}
+
+	function progressbar_widget_scripts(){
+        wp_enqueue_script('progressbar-custom-script',plugins_url('/assets/js/progressbar.min.js',__FILE__),null,time(),true);
+        wp_enqueue_script('progressbar-helper-js',plugins_url('/assets/js/progressbar-helper.js',__FILE__),null,time(),true);
+    }
+	function custom_widget_scripts(){
+        wp_enqueue_script('el-demo-custom-script',plugins_url('/assets/js/custom.js',__FILE__),array('jquery'),time(),true);
+    }
+
+	function widget_styles(){
+	    wp_enqueue_style('froala','//cdnjs.cloudflare.com/ajax/libs/froala-design-blocks/2.0.1/css/froala_blocks.min.css');
+    }
 
 	function add_elementor_widget_categories($elements_manager){
 		$elements_manager->add_category(
@@ -108,9 +123,15 @@ final class Elementor_Test_Extension {
 
 		// Include Widget files
 		require_once( __DIR__ . '/widgets/test-widgets.php' );
+		require_once( __DIR__ . '/widgets/faq-widgets.php' );
+		require_once( __DIR__ . '/widgets/pricing-widgets.php' );
+		require_once( __DIR__ . '/widgets/progressbar-widgets.php' );
 
 		// Register widget
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_oEmbed_Widget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Faq_Widget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_pricing_Widget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_progressbar_Widget() );
 
 	}
 
